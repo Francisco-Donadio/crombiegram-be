@@ -30,7 +30,6 @@ const login: RequestHandler = async (req, res) => {
         const payload = {
           email: user.email,
           id: user.id,
-          username: user.username,
         };
         const token = jwt.sign(payload, "gj383fh13sf8");
 

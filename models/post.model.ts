@@ -14,25 +14,25 @@ import {
   HasMany,
   IsEmail,
   Unique,
+  IsDate,
 } from "sequelize-typescript";
 import { Optional, UUIDV4 } from "sequelize";
-import Post from "./post.model";
+import User from "./user.model";
 
-export interface UserInterface {
+export interface PostInterface {
   id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  password: string;
+  userId: string;
+  contentText: string;
+  date: Date;
 }
 
-export interface UserCreationAttributes extends Optional<UserInterface, "id"> {}
+export interface PostCreationAttributes extends Optional<PostInterface, "id"> {}
 
 @Table({
-  tableName: "user",
+  tableName: "post",
   timestamps: true,
 })
-export default class User extends Model<UserInterface, UserCreationAttributes> {
+export default class Post extends Model<PostInterface, PostCreationAttributes> {
   @PrimaryKey
   @IsUUID(4)
   @Default(UUIDV4)
@@ -47,22 +47,20 @@ export default class User extends Model<UserInterface, UserCreationAttributes> {
   declare email: string;
 
   @AllowNull(false)
-  @NotEmpty
-  @Unique
   @Column
-  declare fistName: string;
+  declare contentText: string;
 
   @AllowNull(false)
   @NotEmpty
-  @Unique
+  @IsDate
   @Column
-  declare lastName: string;
+  declare date: Date;
 
+  @ForeignKey(() => User)
   @AllowNull(false)
-  @NotEmpty
   @Column
-  declare password: string;
+  declare userId: string;
 
-  @HasMany(() => Post)
-  declare post: Post[];
+  @BelongsTo(() => User)
+  declare user: User;
 }

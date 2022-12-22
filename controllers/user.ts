@@ -14,7 +14,7 @@ const getMe: RequestHandler = async (req, res) => {
 
 const updateUser: RequestHandler = async (req, res) => {
   try {
-    const { email, username, password, repeatPassword } = req.body;
+    const { email, lastName, firstName, password, repeatPassword } = req.body;
 
     const user = res.locals.user;
 
@@ -26,7 +26,7 @@ const updateUser: RequestHandler = async (req, res) => {
     bcrypt.hash(password, saltRounds).then(async (hash) => {
       try {
         await User.update(
-          { email, username, password: hash },
+          { email, firstName, lastName, password: hash },
           { where: { id: user.id } }
         );
 
