@@ -23,7 +23,6 @@ export interface PostInterface {
   id: string;
   userId: string;
   contentText: string;
-  date: Date;
 }
 
 export interface PostCreationAttributes extends Optional<PostInterface, "id"> {}
@@ -40,21 +39,8 @@ export default class Post extends Model<PostInterface, PostCreationAttributes> {
   declare id: string;
 
   @AllowNull(false)
-  @NotEmpty
-  @IsEmail
-  @Unique
-  @Column
-  declare email: string;
-
-  @AllowNull(false)
   @Column
   declare contentText: string;
-
-  @AllowNull(false)
-  @NotEmpty
-  @IsDate
-  @Column
-  declare date: Date;
 
   @ForeignKey(() => User)
   @AllowNull(false)

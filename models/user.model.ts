@@ -48,13 +48,11 @@ export default class User extends Model<UserInterface, UserCreationAttributes> {
 
   @AllowNull(false)
   @NotEmpty
-  @Unique
   @Column
   declare fistName: string;
 
   @AllowNull(false)
   @NotEmpty
-  @Unique
   @Column
   declare lastName: string;
 

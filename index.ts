@@ -1,11 +1,27 @@
-import express from "express";
+import express, { NextFunction, RequestHandler } from "express";
 import cors from "cors";
 import appRouter from "./routes";
 import { sequelize } from "./models";
+import fileUpload from "express-fileupload";
+import { getFileURL, uploadFile } from "./config/s3";
 
 const app = express();
+
 app.use(express.json());
 app.use(cors());
+app.use(fileUpload({ useTempFiles: true, tempFileDir: "./uploads" }));
+
+app.post("/files", async (req, res) => {
+  const result = await uploadFile(req.files!.file);
+  return res.send({ result });
+});
+
+app.get("/files/:fileName", async (req, res) => {
+  const result = await getFileURL(req.params.fileName);
+  res.json({
+    url: result,
+  });
+});
 
 app.post("/sync", async (req, res) => {
   sequelize
@@ -26,6 +42,8 @@ app.post("/sync", async (req, res) => {
 });
 
 app.use("/api", appRouter);
+
+// app.use(express.static("images"));
 
 app.listen(3000, () => {
   return console.log(`Server running on 3000`);
