@@ -7,6 +7,7 @@
     "@types/jsonwebtoken": "^8.5.9",
     "@types/multer": "^1.4.7",
     "@types/node": "^18.11.17",
+    "@types/uuid": "^9.0.0",
     "@types/validator": "^13.7.10",
     "nodemon": "^2.0.20",
     "sequelize-cli": "^6.5.2",

@@ -23,6 +23,7 @@ export interface PostInterface {
   id: string;
   userId: string;
   contentText: string;
+  imageName?: string;
 }
 
 export interface PostCreationAttributes extends Optional<PostInterface, "id"> {}
@@ -41,6 +42,10 @@ export default class Post extends Model<PostInterface, PostCreationAttributes> {
   @AllowNull(false)
   @Column
   declare contentText: string;
+
+  @AllowNull(true)
+  @Column
+  declare imageName?: string;
 
   @ForeignKey(() => User)
   @AllowNull(false)

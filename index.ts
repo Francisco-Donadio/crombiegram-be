@@ -3,7 +3,7 @@ import cors from "cors";
 import appRouter from "./routes";
 import { sequelize } from "./models";
 import fileUpload from "express-fileupload";
-import { getFileURL, uploadFile } from "./config/s3";
+import { getFileURL, uploadFile } from "./libs/s3";
 
 const app = express();
 
