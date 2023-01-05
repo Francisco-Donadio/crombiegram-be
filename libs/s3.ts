@@ -7,7 +7,6 @@ import {
   PutObjectCommand,
   GetObjectCommand,
 } from "@aws-sdk/client-s3";
-import fs from "fs";
 
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
@@ -25,9 +24,7 @@ const s3Cleint = new S3Client({
 });
 
 export async function uploadFile(fileData: any) {
-  //const stream = fs.createReadStream(fileData.tempFilePath);
   const imageName = uuidv4() + fileData.name;
-  console.log({ fileData });
 
   const uploadParams = {
     Bucket: AWS_BUCKET_NAME,
@@ -40,10 +37,10 @@ export async function uploadFile(fileData: any) {
   return imageName;
 }
 
-export async function getFileURL(filename: any) {
-  const command = new GetObjectCommand({
-    Bucket: AWS_BUCKET_NAME,
-    Key: filename,
-  });
-  return await getSignedUrl(s3Cleint, command, { expiresIn: 3600 });
-}
+// export async function getFileTempURL(filename: any) {
+//   const command = new GetObjectCommand({
+//     Bucket: AWS_BUCKET_NAME,
+//     Key: filename,
+//   });
+//   return await getSignedUrl(s3Cleint, command, { expiresIn: 3600 });
+// }
