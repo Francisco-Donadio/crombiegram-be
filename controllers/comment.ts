@@ -1,5 +1,4 @@
 import { RequestHandler } from "express";
-import Post from "../models/post.model";
 import Comment, { CommentCreationAttributes } from "../models/comment.model";
 
 const CreateCommentPost: RequestHandler = async (req, res) => {

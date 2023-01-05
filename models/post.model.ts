@@ -18,6 +18,7 @@ import {
 } from "sequelize-typescript";
 import { Optional, UUIDV4 } from "sequelize";
 import User from "./user.model";
+import Comment from "./comment.model";
 
 export interface PostInterface {
   id: string;
@@ -54,4 +55,7 @@ export default class Post extends Model<PostInterface, PostCreationAttributes> {
 
   @BelongsTo(() => User)
   declare user: User;
+
+  @HasMany(() => Comment)
+  declare comment: Comment[];
 }

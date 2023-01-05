@@ -7,28 +7,21 @@ import Comment from "../models/comment.model";
 
 const createPost: RequestHandler = async (req, res) => {
   try {
+    let imageName = undefined;
     const body = req.body as PostCreationAttributes;
 
     if (req.files) {
-      const imageName = await uploadFile(req.files!.file);
-
-      const post = await Post.create({
-        contentText: body.contentText,
-        userId: body.userId,
-        imageName: imageName.replace(" ", "+"),
-      });
-
-      if (!post) {
-        return res.status(400).json({ message: "error al crear post" });
-      }
-
-      return res.status(202).json({ post });
+      const imageNameUpload = await uploadFile(req.files!.file);
+      imageName = imageNameUpload;
     }
-
     const post = await Post.create({
       contentText: body.contentText,
       userId: body.userId,
+      imageName,
     });
+
+    if (!post) return res.status(400).json({ message: "error al crear post" });
+
     return res.status(202).json({ post });
   } catch (error) {
     return res.json({ error: error });
@@ -37,22 +30,31 @@ const createPost: RequestHandler = async (req, res) => {
 
 const getAllPost: RequestHandler = async (req, res) => {
   try {
-    const postArray = await Post.findAll();
+    const postArray = await Post.findAll({
+      include: [{ model: User, attributes: ["firstName", "lastName"] }],
+    });
     return res.status(200).json({ postArray });
-  } catch (error) {}
+  } catch (error) {
+    return res.json({ error: error });
+  }
 };
 
 const getPostWithComments: RequestHandler = async (req, res) => {
   const postId = req.params.id;
 
-  console.log(postId);
   try {
     const post = await Post.findOne({
       where: { id: postId },
-      include: [{ model: Comment, where: { postId: postId } }],
+      include: [{ model: Comment }],
     });
+
+    if (!post) {
+      return res.status(400).json({ message: "error al obtener post" });
+    }
     return res.status(200).json(post);
-  } catch (error) {}
+  } catch (error) {
+    return res.json({ error: error });
+  }
 };
 
 export default { createPost, getAllPost, getPostWithComments };
