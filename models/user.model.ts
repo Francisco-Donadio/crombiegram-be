@@ -49,7 +49,7 @@ export default class User extends Model<UserInterface, UserCreationAttributes> {
   @AllowNull(false)
   @NotEmpty
   @Column
-  declare fistName: string;
+  declare firstName: string;
 
   @AllowNull(false)
   @NotEmpty

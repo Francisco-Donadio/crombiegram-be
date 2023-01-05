@@ -7,11 +7,9 @@ import { uploadFile } from "../libs/s3";
 const createPost: RequestHandler = async (req, res) => {
   try {
     const body = req.body as PostCreationAttributes;
-    console.log(body);
 
-    if (req.files!.file) {
+    if (req.files) {
       const imageName = await uploadFile(req.files!.file);
-      console.log({ imageName });
 
       const post = await Post.create({
         contentText: body.contentText,
@@ -24,15 +22,15 @@ const createPost: RequestHandler = async (req, res) => {
       }
 
       return res.status(400).json({ post });
-    } else {
-      const post = await Post.create({
-        contentText: body.contentText,
-        userId: body.userId,
-      });
-      return res.status(400).json({ post });
     }
+
+    const post = await Post.create({
+      contentText: body.contentText,
+      userId: body.userId,
+    });
+    return res.status(400).json({ post });
   } catch (error) {
-    return res.json({ error });
+    return res.json({ error: error });
   }
 };
 

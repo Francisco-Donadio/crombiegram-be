@@ -25,13 +25,14 @@ const s3Cleint = new S3Client({
 });
 
 export async function uploadFile(fileData: any) {
-  const stream = fs.createReadStream(fileData.tempFilePath);
+  //const stream = fs.createReadStream(fileData.tempFilePath);
   const imageName = uuidv4() + fileData.name;
+  console.log({ fileData });
 
   const uploadParams = {
     Bucket: AWS_BUCKET_NAME,
     Key: imageName,
-    Body: stream,
+    Body: fileData.data,
   };
 
   const command = new PutObjectCommand(uploadParams);

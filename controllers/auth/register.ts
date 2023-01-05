@@ -6,7 +6,7 @@ type Body = {
   email: string;
   password: string;
   repeatPassword: string;
-  fistName: string;
+  firstName: string;
   lastName: string;
 };
 
@@ -24,7 +24,7 @@ const register: RequestHandler = async (req, res) => {
       try {
         await User.create({
           email: body.email,
-          firstName: body.fistName,
+          firstName: body.firstName,
           lastName: body.lastName,
           password: hash,
         });

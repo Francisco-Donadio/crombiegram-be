@@ -9,7 +9,8 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
-app.use(fileUpload({ useTempFiles: true, tempFileDir: "./uploads" }));
+//app.use(fileUpload({ useTempFiles: true, tempFileDir: "./uploads" }));
+app.use(fileUpload());
 
 app.post("/files", async (req, res) => {
   const result = await uploadFile(req.files!.file);
@@ -21,6 +22,10 @@ app.get("/files/:fileName", async (req, res) => {
   res.json({
     url: result,
   });
+});
+
+app.get("/test", (req, res) => {
+  return res.json("test");
 });
 
 app.post("/sync", async (req, res) => {
