@@ -30,10 +30,10 @@ const createPost: RequestHandler = async (req, res) => {
 
 const getAllPost: RequestHandler = async (req, res) => {
   try {
-    const postArray = await Post.findAll({
+    const postList = await Post.findAll({
       include: [{ model: User, attributes: ["firstName", "lastName"] }],
     });
-    return res.status(200).json({ postArray });
+    return res.status(200).json(postList);
   } catch (error) {
     return res.json({ error: error });
   }
