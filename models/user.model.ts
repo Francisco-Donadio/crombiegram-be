@@ -23,6 +23,7 @@ export interface UserInterface {
   email: string;
   firstName: string;
   lastName: string;
+  birthday: Date;
   password: string;
 }
 
@@ -55,6 +56,11 @@ export default class User extends Model<UserInterface, UserCreationAttributes> {
   @NotEmpty
   @Column
   declare lastName: string;
+
+  @AllowNull(false)
+  @NotEmpty
+  @Column
+  declare birthday: Date;
 
   @AllowNull(false)
   @NotEmpty

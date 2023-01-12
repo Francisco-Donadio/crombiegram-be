@@ -5,6 +5,7 @@ import User from "../../models/user.model";
 type Body = {
   email: string;
   password: string;
+  birthday: Date;
   repeatPassword: string;
   firstName: string;
   lastName: string;
@@ -26,6 +27,7 @@ const register: RequestHandler = async (req, res) => {
           email: body.email,
           firstName: body.firstName,
           lastName: body.lastName,
+          birthday: body.birthday,
           password: hash,
         });
 
