@@ -7,6 +7,8 @@ import Comment from "../models/comment.model";
 
 const createPost: RequestHandler = async (req, res) => {
   try {
+    const user = res.locals.user;
+
     let imageName = undefined;
     const body = req.body as PostCreationAttributes;
 
@@ -16,7 +18,7 @@ const createPost: RequestHandler = async (req, res) => {
     }
     const post = await Post.create({
       contentText: body.contentText,
-      userId: body.userId,
+      userId: user.id,
       imageName,
     });
 
@@ -31,7 +33,10 @@ const createPost: RequestHandler = async (req, res) => {
 const getAllPost: RequestHandler = async (req, res) => {
   try {
     const postList = await Post.findAll({
-      include: [{ model: User, attributes: ["firstName", "lastName"] }],
+      include: [
+        { model: User, attributes: ["firstName", "lastName", "profileImage"] },
+      ],
+      order: [["createdAt", "DESC"]],
     });
     return res.status(200).json(postList);
   } catch (error) {
