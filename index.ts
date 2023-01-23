@@ -1,31 +1,15 @@
-import express, { NextFunction, RequestHandler } from "express";
+import express from "express";
 import cors from "cors";
 import appRouter from "./routes";
 import { sequelize } from "./models";
-import fileUpload from "express-fileupload";
-import { uploadFile } from "./libs/s3";
 
 const app = express();
-
-app.use(express.json());
 app.use(cors());
-//app.use(fileUpload({ useTempFiles: true, tempFileDir: "./uploads" }));
-app.use(fileUpload());
+app.use(express.json());
 
-//upload image to aws
-// app.post("/files", async (req, res) => {
-//   const result = await uploadFile(req.files!.file);
-//   return res.send({ result });
-// });
-
-// to getFileTempURL
-// app.get("/files/:fileName", async (req, res) => {
-//   const result = await getFileTempURL(req.params.fileName);
-//   res.json({
-//     url: result,
-//   });
-// });
-
+//
+//SYNC
+//
 app.post("/sync", async (req, res) => {
   sequelize
     .authenticate()

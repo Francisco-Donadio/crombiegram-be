@@ -26,6 +26,7 @@ export interface UserInterface {
   birthday: Date;
   password: string;
   profileImage?: string;
+  position?: string;
 }
 
 export interface UserCreationAttributes extends Optional<UserInterface, "id"> {}
@@ -71,6 +72,10 @@ export default class User extends Model<UserInterface, UserCreationAttributes> {
   @AllowNull(true)
   @Column
   declare profileImage: string;
+
+  @AllowNull(true)
+  @Column
+  declare position: string;
 
   @HasMany(() => Post)
   declare post: Post[];

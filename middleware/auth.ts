@@ -1,6 +1,8 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import jwt from "jsonwebtoken";
 import User from "../models/user.model";
+import dotEnv from "dotenv";
+dotEnv.config();
 
 type Payload = {
   email: string;
@@ -16,7 +18,10 @@ const authMiddleware: RequestHandler = async (req, res, next) => {
     }
 
     const token = req.headers.authorization.split(" ")[1];
-    var payload = jwt.verify(token, "gj383fh13sf8") as Payload;
+    var payload = jwt.verify(
+      token,
+      process.env.JTW_SECRET_AUTH as string
+    ) as Payload;
 
     const user = await User.findByPk(payload.id);
 

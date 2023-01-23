@@ -2,20 +2,20 @@ import { RequestHandler } from "express";
 import Post from "../models/post.model";
 import { PostCreationAttributes } from "../models/post.model";
 import User from "../models/user.model";
-import { uploadFile } from "../libs/s3";
 import Comment from "../models/comment.model";
 
 const createPost: RequestHandler = async (req, res) => {
   try {
     const user = res.locals.user;
-
-    let imageName = undefined;
     const body = req.body as PostCreationAttributes;
 
-    if (req.files) {
-      const imageNameUpload = await uploadFile(req.files!.file);
-      imageName = imageNameUpload;
+    let imageName = undefined;
+
+    if (req.file) {
+      // @ts-ignore
+      imageName = req.file.key;
     }
+
     const post = await Post.create({
       contentText: body.contentText,
       userId: user.id,

@@ -1,6 +1,8 @@
 import User, { UserCreationAttributes } from "../models/user.model";
 import { RequestHandler } from "express";
 import bcrypt from "bcrypt";
+import dotEnv from "dotenv";
+dotEnv.config();
 
 const getMe: RequestHandler = async (req, res) => {
   const user = res.locals.user;
@@ -21,28 +23,33 @@ const updateUser: RequestHandler = async (req, res) => {
       password,
       repeatPassword,
       profileImage,
+      position,
     } = req.body;
 
+    let finalPosition = undefined;
+    if (position) {
+      finalPosition = position;
+    }
     const user = res.locals.user;
 
     if (password != repeatPassword) {
       return res.status(400).json({ message: "password not match" });
     }
 
-    const saltRounds = 10;
+    bcrypt
+      .hash(password, Number(process.env.SALT_ROUNDS))
+      .then(async (hash) => {
+        try {
+          await User.update(
+            { email, firstName, lastName, password: hash, profileImage },
+            { where: { id: user.id } }
+          );
 
-    bcrypt.hash(password, saltRounds).then(async (hash) => {
-      try {
-        await User.update(
-          { email, firstName, lastName, password: hash, profileImage },
-          { where: { id: user.id } }
-        );
-
-        return res.json({ message: "Your account has been updated!" });
-      } catch (error) {
-        return res.status(400).json(error);
-      }
-    });
+          return res.json({ message: "Your account has been updated!" });
+        } catch (error) {
+          return res.status(400).json(error);
+        }
+      });
   } catch (error) {
     return res.json({ error });
   }

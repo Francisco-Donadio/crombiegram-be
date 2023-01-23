@@ -1,21 +1,16 @@
-import dotEnv from "dotenv";
 import { v4 as uuidv4 } from "uuid";
+import { S3Client } from "@aws-sdk/client-s3";
+import multer from "multer";
+import multerS3 from "multer-s3";
+import dotEnv from "dotenv";
 dotEnv.config();
-
-import {
-  S3Client,
-  PutObjectCommand,
-  GetObjectCommand,
-} from "@aws-sdk/client-s3";
-
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID;
 const AWS_ACCESS_KEY_SECRET = process.env.AWS_ACCESS_KEY_SECRET;
-const AWS_BUCKET_NAME = process.env.AWS_BUCKET_NAME;
+export const AWS_BUCKET_NAME = process.env.AWS_BUCKET_NAME;
 const AWS_REGION = process.env.AWS_REGION;
 
-const s3Cleint = new S3Client({
+export const s3Client = new S3Client({
   region: AWS_REGION,
   credentials: {
     accessKeyId: AWS_ACCESS_KEY_ID as string,
@@ -23,24 +18,15 @@ const s3Cleint = new S3Client({
   },
 });
 
-export async function uploadFile(fileData: any) {
-  const imageName = uuidv4() + fileData.name;
+const upload = multer({
+  storage: multerS3({
+    s3: s3Client,
+    bucket: AWS_BUCKET_NAME as string,
 
-  const uploadParams = {
-    Bucket: AWS_BUCKET_NAME,
-    Key: imageName,
-    Body: fileData.data,
-  };
+    key: function (req, file, cb) {
+      cb(null, uuidv4() + "." + file.originalname.split(".")[1]);
+    },
+  }),
+});
 
-  const command = new PutObjectCommand(uploadParams);
-  await s3Cleint.send(command);
-  return imageName;
-}
-
-// export async function getFileTempURL(filename: any) {
-//   const command = new GetObjectCommand({
-//     Bucket: AWS_BUCKET_NAME,
-//     Key: filename,
-//   });
-//   return await getSignedUrl(s3Cleint, command, { expiresIn: 3600 });
-// }
+export default upload;

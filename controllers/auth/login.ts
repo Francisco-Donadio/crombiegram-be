@@ -3,13 +3,13 @@ import bcrypt from "bcrypt";
 import { json } from "sequelize";
 import jwt from "jsonwebtoken";
 import User from "../../models/user.model";
+import dotEnv from "dotenv";
+dotEnv.config();
 
 type Body = {
   email: string;
   password: string;
 };
-
-const saltRounds = 10;
 
 const login: RequestHandler = async (req, res) => {
   try {
@@ -31,7 +31,7 @@ const login: RequestHandler = async (req, res) => {
           email: user.email,
           id: user.id,
         };
-        const token = jwt.sign(payload, "gj383fh13sf8");
+        const token = jwt.sign(payload, process.env.JTW_SECRET_AUTH as string);
 
         return res.status(200).json({ payload: { token } });
       } else {
