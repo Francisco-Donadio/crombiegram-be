@@ -15,6 +15,9 @@ const getMe: RequestHandler = async (req, res) => {
 };
 
 const updateUser: RequestHandler = async (req, res) => {
+  if (req.file) {
+    console.log(req.file);
+  }
   try {
     const {
       email,
@@ -55,6 +58,10 @@ const updateUser: RequestHandler = async (req, res) => {
   }
 };
 
+const updateImage: RequestHandler = async (req, res) => {
+  console.log("HOLAAAAAA XSXSXSXS", req.file);
+};
+
 const getAllUsers: RequestHandler = async (req, res) => {
   try {
     const usersList = await User.findAll({ order: [["firstName", "ASC"]] });
@@ -65,4 +72,4 @@ const getAllUsers: RequestHandler = async (req, res) => {
   }
 };
 
-export default { getMe, updateUser, getAllUsers };
+export default { getMe, updateUser, getAllUsers, updateImage };
