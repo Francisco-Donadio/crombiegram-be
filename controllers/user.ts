@@ -55,4 +55,14 @@ const updateUser: RequestHandler = async (req, res) => {
   }
 };
 
-export default { getMe, updateUser };
+const getAllUsers: RequestHandler = async (req, res) => {
+  try {
+    const usersList = await User.findAll({ order: [["firstName", "ASC"]] });
+    console.log("This is the list of users", usersList);
+    return res.status(200).json(usersList);
+  } catch (error) {
+    return res.json({ error: error });
+  }
+};
+
+export default { getMe, updateUser, getAllUsers };
