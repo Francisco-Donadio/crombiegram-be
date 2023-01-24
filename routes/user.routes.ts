@@ -5,6 +5,7 @@ import authMiddleware from "../middleware/auth";
 const userRouter = Router();
 
 userRouter.get("/me", authMiddleware, user.getMe);
-userRouter.post("/me", authMiddleware, user.updateUser);
+userRouter.put("/me", authMiddleware, user.updateUser);
+userRouter.get("/network", authMiddleware, user.getAllUsers);
 
 export default userRouter;
