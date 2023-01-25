@@ -59,7 +59,34 @@ const updateUser: RequestHandler = async (req, res) => {
 };
 
 const updateImage: RequestHandler = async (req, res) => {
-  console.log("HOLAAAAAA XSXSXSXS", req.file);
+  try {
+    const body = req.body as UserCreationAttributes;
+
+    const user = res.locals.user;
+
+    let profileImage = body.profileImage;
+
+    if (req.file) {
+      //@ts-ignore
+      profileImage = req.file.key;
+    }
+
+    const userUpdated = await User.update(
+      {
+        profileImage,
+      },
+      {
+        where: { id: user.id },
+      }
+    );
+
+    if (!profileImage)
+      return res.status(400).json({ message: "error al actualizar foto" });
+
+    return res.status(200).json({ userUpdated });
+  } catch (error) {
+    return res.json({ error: error });
+  }
 };
 
 const getAllUsers: RequestHandler = async (req, res) => {
