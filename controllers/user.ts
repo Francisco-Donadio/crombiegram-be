@@ -2,16 +2,31 @@ import User, { UserCreationAttributes } from "../models/user.model";
 import { RequestHandler } from "express";
 import bcrypt from "bcrypt";
 import dotEnv from "dotenv";
+import Post from "../models/post.model";
 dotEnv.config();
 
 const getMe: RequestHandler = async (req, res) => {
   const user = res.locals.user;
 
-  if (!user) {
-    return res.status(400).json({ message: "User not found" });
+  //return res.status(200).json({ user });
+  try {
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    const userPosts = await Post.findAll({
+      include: [
+        {
+          model: User,
+          attributes: ["firstName", "lastName", "profileImage"],
+        },
+      ],
+      where: { userId: user.id },
+      order: [["createdAt", "DESC"]],
+    });
+    return res.status(200).json({ user, userPosts });
+  } catch (error) {
+    return res.json({ error: error });
   }
-
-  return res.status(200).json({ user });
 };
 
 const updateUser: RequestHandler = async (req, res) => {
@@ -19,20 +34,32 @@ const updateUser: RequestHandler = async (req, res) => {
     console.log(req.file);
   }
   try {
-    const {
-      email,
-      lastName,
-      firstName,
-      password,
-      repeatPassword,
-      profileImage,
-      position,
-    } = req.body;
+    const { email, lastName, firstName, profileImage, position } = req.body;
 
     let finalPosition = undefined;
     if (position) {
       finalPosition = position;
     }
+    const user = res.locals.user;
+
+    try {
+      await User.update(
+        { email, firstName, lastName, profileImage },
+        { where: { id: user.id } }
+      );
+
+      return res.json({ message: "Your account has been updated!" });
+    } catch (error) {
+      return res.status(400).json(error);
+    }
+  } catch (error) {
+    return res.json({ error });
+  }
+};
+
+const updatePassword: RequestHandler = (req, res) => {
+  try {
+    const { password, repeatPassword } = req.body;
     const user = res.locals.user;
 
     if (password != repeatPassword) {
@@ -43,12 +70,9 @@ const updateUser: RequestHandler = async (req, res) => {
       .hash(password, Number(process.env.SALT_ROUNDS))
       .then(async (hash) => {
         try {
-          await User.update(
-            { email, firstName, lastName, password: hash, profileImage },
-            { where: { id: user.id } }
-          );
+          await User.update({ password: hash }, { where: { id: user.id } });
 
-          return res.json({ message: "Your account has been updated!" });
+          return res.json({ message: "Your password has been updated!" });
         } catch (error) {
           return res.status(400).json(error);
         }
@@ -99,4 +123,4 @@ const getAllUsers: RequestHandler = async (req, res) => {
   }
 };
 
-export default { getMe, updateUser, getAllUsers, updateImage };
+export default { getMe, updateUser, getAllUsers, updateImage, updatePassword };
