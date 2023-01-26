@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import User from "../models/user.model";
 import dotEnv from "dotenv";
 dotEnv.config();
+import cookie from "cookie";
 
 type Payload = {
   email: string;
@@ -13,6 +14,8 @@ type Payload = {
 
 const authMiddleware: RequestHandler = async (req, res, next) => {
   try {
+    const { userToken } = req.cookies;
+
     if (!req.headers.authorization) {
       return res.status(400).json({ message: "Invalid request" });
     }
