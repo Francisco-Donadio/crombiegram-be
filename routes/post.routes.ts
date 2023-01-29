@@ -5,9 +5,9 @@ import upload from "../libs/s3";
 
 const postRouter = Router();
 
-postRouter.get("/", post.getAllPost);
-postRouter.get("/:id", post.getPostWithComments);
+postRouter.get("/", authMiddleware, post.getAllPost);
+postRouter.get("/:id", authMiddleware, post.getPostWithComments);
 postRouter.post("/", authMiddleware, upload.single("image"), post.createPost);
-postRouter.delete("/:id", post.deleteImage);
+postRouter.delete("/:id", authMiddleware, post.deletePost);
 
 export default postRouter;

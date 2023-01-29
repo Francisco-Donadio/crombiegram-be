@@ -17,7 +17,7 @@ const getMe: RequestHandler = async (req, res) => {
       include: [
         {
           model: User,
-          attributes: ["firstName", "lastName", "profileImage"],
+          attributes: ["firstName", "lastName", "profileImage", "position"],
         },
       ],
       where: { userId: user.id },

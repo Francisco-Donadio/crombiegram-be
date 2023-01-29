@@ -26,9 +26,8 @@ const authMiddleware: RequestHandler = async (req, res, next) => {
       process.env.JTW_SECRET_AUTH as string
     ) as Payload;
 
-    console.log(payload);
     const user = await User.findByPk(payload.id);
-    console.log(user);
+
     if (!user) {
       throw new Error("user not founds");
     }

@@ -34,7 +34,10 @@ const getAllPost: RequestHandler = async (req, res) => {
   try {
     const postList = await Post.findAll({
       include: [
-        { model: User, attributes: ["firstName", "lastName", "profileImage"] },
+        {
+          model: User,
+          attributes: ["firstName", "lastName", "profileImage", "position"],
+        },
       ],
       order: [["createdAt", "DESC"]],
     });
@@ -62,12 +65,18 @@ const getPostWithComments: RequestHandler = async (req, res) => {
   }
 };
 
-const deleteImage: RequestHandler = async (req, res) => {
-  const { id } = req.params;
-  const post = await Post.destroy({
-    where: { id },
-  });
-  return res.status(200).json(post);
+const deletePost: RequestHandler = async (req, res) => {
+  try {
+    const user = res.locals.user;
+
+    const { id } = req.params;
+    const post = await Post.destroy({
+      where: { id, userId: user.id },
+    });
+    return res.status(200).json({ message: "post deleted" });
+  } catch (error) {
+    return res.json({ error: error });
+  }
 };
 
-export default { createPost, getAllPost, getPostWithComments, deleteImage };
+export default { createPost, getAllPost, getPostWithComments, deletePost };
