@@ -7,6 +7,7 @@ const userRouter = Router();
 
 userRouter.get("/me", authMiddleware, user.getMe);
 userRouter.put("/me", user.updateUser);
+userRouter.put("/me/password", user.updatePassword);
 userRouter.post(
   "/me/image",
   authMiddleware,

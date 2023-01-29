@@ -62,4 +62,12 @@ const getPostWithComments: RequestHandler = async (req, res) => {
   }
 };
 
-export default { createPost, getAllPost, getPostWithComments };
+const deleteImage: RequestHandler = async (req, res) => {
+  const { id } = req.params;
+  const post = await Post.destroy({
+    where: { id },
+  });
+  return res.status(200).json(post);
+};
+
+export default { createPost, getAllPost, getPostWithComments, deleteImage };
