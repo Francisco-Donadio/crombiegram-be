@@ -2,9 +2,11 @@ import express from "express";
 import cors from "cors";
 import appRouter from "./routes";
 import { sequelize } from "./models";
+import cookieParser from "cookie-parser";
 
 const app = express();
-app.use(cors());
+app.use(cookieParser());
+app.use(cors({ origin: ["http://localhost:3001"], credentials: true }));
 app.use(express.json());
 
 //
