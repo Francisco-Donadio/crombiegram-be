@@ -27,8 +27,7 @@ const login: RequestHandler = async (req, res) => {
     }
 
     // const { userToken } = req.cookies;
-    // console.log(userToken);
-    // res.setHeader("Set-Cookie", "isLoggedin=true");
+
     const payload = {
       email: user.email,
       id: user.id,
@@ -37,13 +36,20 @@ const login: RequestHandler = async (req, res) => {
 
     if (match) {
       const token = jwt.sign(payload, process.env.JTW_SECRET_AUTH as string);
-      const serialized = serialize("userToken", token, {
-        // httpOnly: true,
-        path: "/",
-        maxAge: 1000 * 60 * 60 * 24 * 7,
-      });
-      res.setHeader("Set-Cookie", serialized);
+      // const serialized = serialize("userToken", token, {
+      //   httpOnly: true,
+      //   path: "/",
+      //   maxAge: 1000 * 60 * 60 * 24 * 7,
+      //   expires:
+      // });
+
+      // res.setHeader("Set-Cookie", serialized);
+      const nowDate = new Date();
       return res.status(200).json({
+        payload: {
+          authCookie: token,
+          expires: nowDate.setDate(nowDate.getDate() + 7),
+        },
         message: "Login successful",
       });
       // return res.status(200).json({ payload: { token } });

@@ -14,20 +14,21 @@ type Payload = {
 
 const authMiddleware: RequestHandler = async (req, res, next) => {
   try {
-    const { userToken } = req.cookies;
+    const { authToken } = req.cookies;
 
-    if (!req.headers.authorization) {
+    if (!authToken) {
       return res.status(400).json({ message: "Invalid request" });
     }
 
-    const token = req.headers.authorization.split(" ")[1];
+    // const token = req.headers.authorization.split(" ")[1];
     var payload = jwt.verify(
-      token,
+      authToken,
       process.env.JTW_SECRET_AUTH as string
     ) as Payload;
 
+    console.log(payload);
     const user = await User.findByPk(payload.id);
-
+    console.log(user);
     if (!user) {
       throw new Error("user not founds");
     }
