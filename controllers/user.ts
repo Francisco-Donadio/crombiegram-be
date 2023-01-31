@@ -57,17 +57,27 @@ const updateUser: RequestHandler = async (req, res) => {
   }
 };
 
-const updatePassword: RequestHandler = (req, res) => {
+const updatePassword: RequestHandler = async (req, res) => {
   try {
-    const { password, repeatPassword } = req.body;
+    const { currPassword, newPassword, repeatedNewPassword } = req.body;
     const user = res.locals.user;
 
-    if (password != repeatPassword) {
-      return res.status(400).json({ message: "password not match" });
+    const userData = await User.findByPk(user.id);
+
+    if (!userData) return res.status(400).json({ message: "Invalid user" });
+
+    const match = await bcrypt.compare(currPassword, userData.password);
+
+    if (!match) {
+      return res.status(400).json({ message: "Invalid password" });
+    }
+
+    if (newPassword != repeatedNewPassword) {
+      return res.status(400).json({ message: "New password not match" });
     }
 
     bcrypt
-      .hash(password, Number(process.env.SALT_ROUNDS))
+      .hash(newPassword, Number(process.env.SALT_ROUNDS))
       .then(async (hash) => {
         try {
           await User.update({ password: hash }, { where: { id: user.id } });
