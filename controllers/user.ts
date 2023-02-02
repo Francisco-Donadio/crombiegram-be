@@ -3,12 +3,14 @@ import { RequestHandler } from "express";
 import bcrypt from "bcrypt";
 import dotEnv from "dotenv";
 import Post from "../models/post.model";
+import Comment from "../models/comment.model";
+
 dotEnv.config();
 
-const getMe: RequestHandler = async (req, res) => {
+const getMeProfile: RequestHandler = async (req, res) => {
   const user = res.locals.user;
 
-  //return res.status(200).json({ user });
+  // return res.status(200).json({ user });
   try {
     if (!user) {
       return res.status(400).json({ message: "User not found" });
@@ -18,6 +20,15 @@ const getMe: RequestHandler = async (req, res) => {
         {
           model: User,
           attributes: ["firstName", "lastName", "profileImage", "position"],
+        },
+        {
+          model: Comment,
+          include: [
+            {
+              model: User,
+              attributes: ["firstName", "lastName", "profileImage", "position"],
+            },
+          ],
         },
       ],
       where: { userId: user.id },
@@ -30,11 +41,9 @@ const getMe: RequestHandler = async (req, res) => {
 };
 
 const updateUser: RequestHandler = async (req, res) => {
-  if (req.file) {
-    console.log(req.file);
-  }
   try {
-    const { email, lastName, firstName, profileImage, position } = req.body;
+    const { email, lastName, firstName, profileImage, position, birthday } =
+      req.body;
 
     let finalPosition = undefined;
     if (position) {
@@ -44,7 +53,7 @@ const updateUser: RequestHandler = async (req, res) => {
 
     try {
       await User.update(
-        { email, firstName, lastName, profileImage },
+        { email, firstName, lastName, profileImage, birthday },
         { where: { id: user.id } }
       );
 
@@ -92,7 +101,7 @@ const updatePassword: RequestHandler = async (req, res) => {
   }
 };
 
-const updateImage: RequestHandler = async (req, res) => {
+const updateProfileImage: RequestHandler = async (req, res) => {
   try {
     const body = req.body as UserCreationAttributes;
 
@@ -133,4 +142,10 @@ const getAllUsers: RequestHandler = async (req, res) => {
   }
 };
 
-export default { getMe, updateUser, getAllUsers, updateImage, updatePassword };
+export default {
+  getMeProfile,
+  updateUser,
+  getAllUsers,
+  updateProfileImage,
+  updatePassword,
+};

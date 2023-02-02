@@ -5,6 +5,6 @@ import authMiddleware from "../middleware/auth";
 const commentRouter = Router();
 
 // commentRouter.get("/me", authMiddleware, comment.getMe);
-commentRouter.post("/", comment.CreateCommentPost);
+commentRouter.post("/", authMiddleware, comment.createCommentPost);
 
 export default commentRouter;

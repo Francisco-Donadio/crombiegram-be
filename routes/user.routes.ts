@@ -5,14 +5,14 @@ import authMiddleware from "../middleware/auth";
 
 const userRouter = Router();
 
-userRouter.get("/me", authMiddleware, user.getMe);
+userRouter.get("/me", authMiddleware, user.getMeProfile);
 userRouter.put("/me", authMiddleware, user.updateUser);
 userRouter.patch("/me/password", authMiddleware, user.updatePassword);
 userRouter.patch(
   "/me/image",
   authMiddleware,
   upload.single("profileImage"),
-  user.updateImage
+  user.updateProfileImage
 );
 userRouter.get("/network", authMiddleware, user.getAllUsers);
 

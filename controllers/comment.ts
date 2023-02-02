@@ -1,12 +1,13 @@
 import { RequestHandler } from "express";
 import Comment, { CommentCreationAttributes } from "../models/comment.model";
 
-const CreateCommentPost: RequestHandler = async (req, res) => {
+const createCommentPost: RequestHandler = async (req, res) => {
   try {
+    const user = res.locals.user;
     const body = req.body as CommentCreationAttributes;
 
     const comment = await Comment.create({
-      userId: body.userId,
+      userId: user.id,
       postId: body.postId,
       comment: body.comment,
     });
@@ -21,4 +22,4 @@ const CreateCommentPost: RequestHandler = async (req, res) => {
   }
 };
 
-export default { CreateCommentPost };
+export default { createCommentPost };

@@ -35,11 +35,23 @@ const getAllPost: RequestHandler = async (req, res) => {
     const postList = await Post.findAll({
       include: [
         {
+          model: Comment,
+          include: [
+            {
+              model: User,
+              attributes: ["firstName", "lastName", "profileImage", "position"],
+            },
+          ],
+        },
+        {
           model: User,
           attributes: ["firstName", "lastName", "profileImage", "position"],
         },
       ],
-      order: [["createdAt", "DESC"]],
+      order: [
+        ["createdAt", "DESC"],
+        [{ model: Comment, as: "comment" }, "createdAt", "DESC"],
+      ],
     });
     return res.status(200).json(postList);
   } catch (error) {
@@ -53,7 +65,18 @@ const getPostWithComments: RequestHandler = async (req, res) => {
   try {
     const post = await Post.findOne({
       where: { id: postId },
-      include: [{ model: Comment }],
+      include: [
+        {
+          model: Comment,
+          include: [
+            {
+              model: User,
+              attributes: ["firstName", "lastName", "profileImage", "position"],
+            },
+          ],
+        },
+        { model: User, attributes: ["firstName", "lastName", "profileImage"] },
+      ],
     });
 
     if (!post) {
@@ -79,4 +102,9 @@ const deletePost: RequestHandler = async (req, res) => {
   }
 };
 
-export default { createPost, getAllPost, getPostWithComments, deletePost };
+export default {
+  createPost,
+  getAllPost,
+  getPostWithComments,
+  deletePost,
+};
