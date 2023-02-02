@@ -141,7 +141,6 @@ const getAllUsers: RequestHandler = async (req, res) => {
   }
 };
 
-
 const getUserById: RequestHandler = async (req, res) => {
   const userId = req.params.id;
 
@@ -150,6 +149,22 @@ const getUserById: RequestHandler = async (req, res) => {
       include: [
         {
           model: Post,
+          include: [
+            {
+              model: Comment,
+              include: [
+                {
+                  model: User,
+                  attributes: [
+                    "firstName",
+                    "lastName",
+                    "profileImage",
+                    "position",
+                  ],
+                },
+              ],
+            },
+          ],
         },
       ],
     });
@@ -160,11 +175,10 @@ const getUserById: RequestHandler = async (req, res) => {
 };
 
 export default {
-  getMe,
+  getMeProfile,
   updateUser,
   getAllUsers,
-  updateImage,
+  updateProfileImage,
   updatePassword,
   getUserById,
-
 };
