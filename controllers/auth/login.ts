@@ -36,14 +36,7 @@ const login: RequestHandler = async (req, res) => {
 
     if (match) {
       const token = jwt.sign(payload, process.env.JTW_SECRET_AUTH as string);
-      // const serialized = serialize("userToken", token, {
-      //   httpOnly: true,
-      //   path: "/",
-      //   maxAge: 1000 * 60 * 60 * 24 * 7,
-      //   expires:
-      // });
 
-      // res.setHeader("Set-Cookie", serialized);
       const nowDate = new Date();
       return res.status(200).json({
         payload: {
@@ -52,7 +45,6 @@ const login: RequestHandler = async (req, res) => {
         },
         message: "Login successful",
       });
-      // return res.status(200).json({ payload: { token } });
     } else {
       return res.status(400).json({ message: "Invalid Username or Password" });
     }
