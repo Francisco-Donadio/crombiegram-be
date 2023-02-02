@@ -10,7 +10,6 @@ dotEnv.config();
 const getMeProfile: RequestHandler = async (req, res) => {
   const user = res.locals.user;
 
-  // return res.status(200).json({ user });
   try {
     if (!user) {
       return res.status(400).json({ message: "User not found" });
@@ -142,10 +141,30 @@ const getAllUsers: RequestHandler = async (req, res) => {
   }
 };
 
+
+const getUserById: RequestHandler = async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const contact = await User.findByPk(userId, {
+      include: [
+        {
+          model: Post,
+        },
+      ],
+    });
+    return res.status(200).json(contact);
+  } catch (error) {
+    return res.json({ error: error });
+  }
+};
+
 export default {
-  getMeProfile,
+  getMe,
   updateUser,
   getAllUsers,
-  updateProfileImage,
+  updateImage,
   updatePassword,
+  getUserById,
+
 };

@@ -15,5 +15,6 @@ userRouter.patch(
   user.updateProfileImage
 );
 userRouter.get("/network", authMiddleware, user.getAllUsers);
+userRouter.get("/contact/:id", user.getUserById);
 
 export default userRouter;
