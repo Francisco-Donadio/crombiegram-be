@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import dotEnv from "dotenv";
 import Post from "../models/post.model";
 import Comment from "../models/comment.model";
+import Like from "../models/like.model";
 
 dotEnv.config();
 
@@ -26,6 +27,15 @@ const getMeProfile: RequestHandler = async (req, res) => {
             {
               model: User,
               attributes: ["firstName", "lastName", "profileImage", "position"],
+            },
+          ],
+        },
+        {
+          model: Like,
+          include: [
+            {
+              model: User,
+              attributes: ["firstName", "lastName"],
             },
           ],
         },

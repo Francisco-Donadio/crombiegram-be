@@ -22,4 +22,23 @@ const createCommentPost: RequestHandler = async (req, res) => {
   }
 };
 
-export default { createCommentPost };
+const deleteCommentPost: RequestHandler = async (req, res) => {
+  try {
+    const commentId = req.params.id;
+    const user = res.locals.user;
+    const body = req.body as CommentCreationAttributes;
+
+    const comment = await Comment.destroy({
+      where: { id: commentId, userId: user.id },
+    });
+
+    if (!comment) {
+      return res.status(400).json({ message: "error delete comment" });
+    }
+    return res.status(202).json({ message: "comment deleted" });
+  } catch (error) {
+    return res.json({ error: error });
+  }
+};
+
+export default { createCommentPost, deleteCommentPost };
