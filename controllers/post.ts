@@ -60,7 +60,7 @@ const getAllPost: RequestHandler = async (req, res) => {
       ],
       order: [
         ["createdAt", "DESC"],
-        [{ model: Comment, as: "comment" }, "createdAt", "DESC"],
+        [{ model: Comment, as: "comment" }, "createdAt", "ASC"],
       ],
     });
     return res.status(200).json(postList);
