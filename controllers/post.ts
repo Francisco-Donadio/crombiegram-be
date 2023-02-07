@@ -3,6 +3,7 @@ import Post from "../models/post.model";
 import { PostCreationAttributes } from "../models/post.model";
 import User from "../models/user.model";
 import Comment from "../models/comment.model";
+import Like from "../models/like.model";
 
 const createPost: RequestHandler = async (req, res) => {
   try {
@@ -46,6 +47,15 @@ const getAllPost: RequestHandler = async (req, res) => {
         {
           model: User,
           attributes: ["firstName", "lastName", "profileImage", "position"],
+        },
+        {
+          model: Like,
+          include: [
+            {
+              model: User,
+              attributes: ["firstName", "lastName"],
+            },
+          ],
         },
       ],
       order: [

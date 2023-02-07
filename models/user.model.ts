@@ -17,6 +17,7 @@ import {
 } from "sequelize-typescript";
 import { Optional, UUIDV4 } from "sequelize";
 import Post from "./post.model";
+import Like from "./like.model";
 
 export interface UserInterface {
   id: string;
@@ -79,4 +80,7 @@ export default class User extends Model<UserInterface, UserCreationAttributes> {
 
   @HasMany(() => Post)
   declare post: Post[];
+
+  @HasMany(() => Like)
+  declare like: Like[];
 }

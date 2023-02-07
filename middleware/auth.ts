@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 import User from "../models/user.model";
 import dotEnv from "dotenv";
 dotEnv.config();
-import cookie from "cookie";
 
 type Payload = {
   email: string;

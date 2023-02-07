@@ -14,8 +14,8 @@ type userDataPayloadType = {
 
 const revalidateToken: RequestHandler = async (req, res) => {
   try {
-    const { authToken } = req.cookies;
-
+    const authToken = req.cookies.authToken;
+    console.log({ authToken });
     var userDataPayload = jwt.verify(
       authToken,
       process.env.JTW_SECRET_AUTH as string
@@ -40,7 +40,7 @@ const revalidateToken: RequestHandler = async (req, res) => {
         authCookie: newToken,
         expires: nowDate.setDate(nowDate.getDate() + 7),
       },
-      message: "Login successful",
+      message: "revalidate successful",
     });
     // return res.status(200).json({ payload: { token } });
   } catch (error) {

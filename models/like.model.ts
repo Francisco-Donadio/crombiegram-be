@@ -18,36 +18,26 @@ import {
 } from "sequelize-typescript";
 import { Optional, UUIDV4 } from "sequelize";
 import User from "./user.model";
-import Comment from "./comment.model";
-import Like from "./like.model";
+import Post from "./post.model";
 
-export interface PostInterface {
+export interface LikeInterface {
   id: string;
   userId: string;
-  contentText: string;
-  imageName?: string;
+  postId: string;
 }
 
-export interface PostCreationAttributes extends Optional<PostInterface, "id"> {}
+export interface LikeCreationAttributes extends Optional<LikeInterface, "id"> {}
 
 @Table({
-  tableName: "post",
+  tableName: "like",
   timestamps: true,
 })
-export default class Post extends Model<PostInterface, PostCreationAttributes> {
+export default class Like extends Model<LikeInterface, LikeCreationAttributes> {
   @PrimaryKey
   @IsUUID(4)
   @Default(UUIDV4)
   @Column
   declare id: string;
-
-  @AllowNull(false)
-  @Column
-  declare contentText: string;
-
-  @AllowNull(true)
-  @Column
-  declare imageName?: string;
 
   @ForeignKey(() => User)
   @AllowNull(false)
@@ -57,9 +47,11 @@ export default class Post extends Model<PostInterface, PostCreationAttributes> {
   @BelongsTo(() => User)
   declare user: User;
 
-  @HasMany(() => Comment)
-  declare comment: Comment[];
+  @ForeignKey(() => Post)
+  @AllowNull(false)
+  @Column
+  declare postId: string;
 
-  @HasMany(() => Like)
-  declare like: Like[];
+  @BelongsTo(() => Post)
+  declare post: Post;
 }

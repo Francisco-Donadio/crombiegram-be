@@ -1,11 +1,9 @@
 import { RequestHandler } from "express";
 import bcrypt from "bcrypt";
-import { json } from "sequelize";
 import jwt from "jsonwebtoken";
 import User from "../../models/user.model";
 import dotEnv from "dotenv";
 dotEnv.config();
-import cookie, { serialize } from "cookie";
 
 type Body = {
   email: string;
