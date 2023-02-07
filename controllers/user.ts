@@ -144,7 +144,6 @@ const updateProfileImage: RequestHandler = async (req, res) => {
 const getAllUsers: RequestHandler = async (req, res) => {
   try {
     const usersList = await User.findAll({ order: [["firstName", "ASC"]] });
-    console.log("This is the list of users", usersList);
     return res.status(200).json(usersList);
   } catch (error) {
     return res.json({ error: error });
@@ -155,29 +154,7 @@ const getUserById: RequestHandler = async (req, res) => {
   const userId = req.params.id;
 
   try {
-    const contact = await User.findByPk(userId, {
-      include: [
-        {
-          model: Post,
-          include: [
-            {
-              model: Comment,
-              include: [
-                {
-                  model: User,
-                  attributes: [
-                    "firstName",
-                    "lastName",
-                    "profileImage",
-                    "position",
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    });
+    const contact = await User.findByPk(userId);
     return res.status(200).json(contact);
   } catch (error) {
     return res.json({ error: error });
