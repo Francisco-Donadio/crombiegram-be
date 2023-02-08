@@ -114,8 +114,6 @@ const deletePost: RequestHandler = async (req, res) => {
 
 const getPostById: RequestHandler = async (req, res) => {
   const userId = req.params.id;
-  console.log("USERRRRR", userId);
-
   try {
     const postList = await Post.findAll({
       include: [
