@@ -5,6 +5,7 @@ import dotEnv from "dotenv";
 import Post from "../models/post.model";
 import Comment from "../models/comment.model";
 import Like from "../models/like.model";
+import { Op } from "sequelize";
 
 dotEnv.config();
 
@@ -142,8 +143,12 @@ const updateProfileImage: RequestHandler = async (req, res) => {
 };
 
 const getAllUsers: RequestHandler = async (req, res) => {
+  const user = res.locals.user;
   try {
-    const usersList = await User.findAll({ order: [["firstName", "ASC"]] });
+    const usersList = await User.findAll({
+      where: { id: { [Op.ne]: user.id } },
+      order: [["firstName", "ASC"]],
+    });
     return res.status(200).json(usersList);
   } catch (error) {
     return res.json({ error: error });
