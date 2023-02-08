@@ -112,9 +112,50 @@ const deletePost: RequestHandler = async (req, res) => {
   }
 };
 
+const getPostById: RequestHandler = async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const postList = await Post.findAll({
+      include: [
+        {
+          model: Comment,
+          include: [
+            {
+              model: User,
+              attributes: ["firstName", "lastName", "profileImage", "position"],
+            },
+          ],
+        },
+        {
+          model: User,
+          attributes: ["firstName", "lastName", "profileImage", "position"],
+        },
+        {
+          model: Like,
+          include: [
+            {
+              model: User,
+              attributes: ["firstName", "lastName"],
+            },
+          ],
+        },
+      ],
+      where: { userId },
+      order: [
+        ["createdAt", "DESC"],
+        [{ model: Comment, as: "comment" }, "createdAt", "ASC"],
+      ],
+    });
+    return res.status(200).json(postList);
+  } catch (error) {
+    return res.json({ error: error });
+  }
+};
+
 export default {
   createPost,
   getAllPost,
   getPostWithComments,
   deletePost,
+  getPostById,
 };

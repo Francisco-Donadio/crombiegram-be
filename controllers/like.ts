@@ -3,13 +3,13 @@ import Like, { LikeCreationAttributes } from "../models/like.model";
 
 const createLikePost: RequestHandler = async (req, res) => {
   try {
-    // const user = res.locals.user;
+    const user = res.locals.user;
 
     const postId = req.params.id;
-    const { userId } = req.body;
+    //const { userId } = req.body;
 
     const like = await Like.create({
-      userId: userId,
+      userId: user.id,
       postId: postId,
     });
 
