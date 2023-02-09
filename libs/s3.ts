@@ -5,23 +5,23 @@ import multerS3 from "multer-s3";
 import dotEnv from "dotenv";
 dotEnv.config();
 
-const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID;
-const AWS_ACCESS_KEY_SECRET = process.env.AWS_ACCESS_KEY_SECRET;
-export const AWS_BUCKET_NAME = process.env.AWS_BUCKET_NAME;
-const AWS_REGION = process.env.AWS_REGION;
+const CLOUD_ACCESS_KEY_ID = process.env.CLOUD_ACCESS_KEY_ID;
+const CLOUD_ACCESS_KEY_SECRET = process.env.CLOUD_ACCESS_KEY_SECRET;
+export const CLOUD_BUCKET_NAME = process.env.CLOUD_BUCKET_NAME;
+const CLOUD_REGION = process.env.CLOUD_REGION;
 
 export const s3Client = new S3Client({
-  region: AWS_REGION,
+  region: CLOUD_REGION,
   credentials: {
-    accessKeyId: AWS_ACCESS_KEY_ID as string,
-    secretAccessKey: AWS_ACCESS_KEY_SECRET as string,
+    accessKeyId: CLOUD_ACCESS_KEY_ID as string,
+    secretAccessKey: CLOUD_ACCESS_KEY_SECRET as string,
   },
 });
 
 const upload = multer({
   storage: multerS3({
     s3: s3Client,
-    bucket: AWS_BUCKET_NAME as string,
+    bucket: CLOUD_BUCKET_NAME as string,
 
     key: function (req, file, cb) {
       cb(null, uuidv4() + "." + file.originalname.split(".")[1]);
