@@ -101,10 +101,9 @@ const getPostWithComments: RequestHandler = async (req, res) => {
 const deletePost: RequestHandler = async (req, res) => {
   try {
     const user = res.locals.user;
-
     const { id } = req.params;
     const post = await Post.destroy({
-      where: { id, userId: user.id },
+      where: { id: id, userId: user.id },
     });
     return res.status(200).json({ message: "post deleted" });
   } catch (error) {
@@ -152,10 +151,49 @@ const getPostById: RequestHandler = async (req, res) => {
   }
 };
 
+const getMyPosts: RequestHandler = async (req, res) => {
+  const user = res.locals.user;
+
+  try {
+    const myPosts = await Post.findAll({
+      include: [
+        {
+          model: User,
+          attributes: ["firstName", "lastName", "profileImage", "position"],
+        },
+        {
+          model: Comment,
+          include: [
+            {
+              model: User,
+              attributes: ["firstName", "lastName", "profileImage", "position"],
+            },
+          ],
+        },
+        {
+          model: Like,
+          include: [
+            {
+              model: User,
+              attributes: ["firstName", "lastName"],
+            },
+          ],
+        },
+      ],
+      where: { userId: user.id },
+      order: [["createdAt", "DESC"]],
+    });
+    return res.status(200).json(myPosts);
+  } catch (error) {
+    return res.json({ error: error });
+  }
+};
+
 export default {
   createPost,
   getAllPost,
   getPostWithComments,
   deletePost,
   getPostById,
+  getMyPosts,
 };
