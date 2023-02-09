@@ -9,6 +9,8 @@ app.use(cors({ origin: ["http://localhost:3001"], credentials: true }));
 app.use(cookieParser());
 app.use(express.json());
 
+const awsServerlessExpress = require("aws-serverless-express");
+
 //
 //SYNC
 //
@@ -32,6 +34,11 @@ app.post("/sync", async (req, res) => {
 
 app.use("/api", appRouter);
 
-app.listen(3000, () => {
-  return console.log(`Server running on 3000`);
-});
+const server = awsServerlessExpress.createServer(app);
+export const handler = (event: any, context: any) => {
+  console.log(`EVENT: ${JSON.stringify(event)}`);
+  awsServerlessExpress.proxy(server, event, context);
+};
+// app.listen(3000, () => {
+//   return console.log(`Server running on 3000`);
+// });
