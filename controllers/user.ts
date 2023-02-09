@@ -11,43 +11,10 @@ dotEnv.config();
 
 const getMeProfile: RequestHandler = async (req, res) => {
   const user = res.locals.user;
-
-  try {
-    if (!user) {
-      return res.status(400).json({ message: "User not found" });
-    }
-    const userPosts = await Post.findAll({
-      include: [
-        {
-          model: User,
-          attributes: ["firstName", "lastName", "profileImage", "position"],
-        },
-        {
-          model: Comment,
-          include: [
-            {
-              model: User,
-              attributes: ["firstName", "lastName", "profileImage", "position"],
-            },
-          ],
-        },
-        {
-          model: Like,
-          include: [
-            {
-              model: User,
-              attributes: ["firstName", "lastName"],
-            },
-          ],
-        },
-      ],
-      where: { userId: user.id },
-      order: [["createdAt", "DESC"]],
-    });
-    return res.status(200).json({ user, userPosts });
-  } catch (error) {
-    return res.json({ error: error });
+  if (!user) {
+    return res.status(400).json({ message: "User not found" });
   }
+  return res.status(200).json(user);
 };
 
 const updateUser: RequestHandler = async (req, res) => {
@@ -63,7 +30,7 @@ const updateUser: RequestHandler = async (req, res) => {
 
     try {
       await User.update(
-        { email, firstName, lastName, profileImage, birthday },
+        { email, firstName, lastName, profileImage, birthday, position },
         { where: { id: user.id } }
       );
 

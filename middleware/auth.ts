@@ -14,7 +14,6 @@ type Payload = {
 const authMiddleware: RequestHandler = async (req, res, next) => {
   try {
     const { authToken } = req.cookies;
-
     if (!authToken) {
       return res.status(400).json({ message: "Invalid request" });
     }
@@ -26,7 +25,7 @@ const authMiddleware: RequestHandler = async (req, res, next) => {
     ) as Payload;
 
     const user = await User.findByPk(payload.id);
-
+    // console.log(user);
     if (!user) {
       throw new Error("user not founds");
     }

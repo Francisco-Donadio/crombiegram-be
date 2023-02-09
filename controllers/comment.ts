@@ -26,7 +26,6 @@ const deleteCommentPost: RequestHandler = async (req, res) => {
   try {
     const commentId = req.params.id;
     const user = res.locals.user;
-    const body = req.body as CommentCreationAttributes;
 
     const comment = await Comment.destroy({
       where: { id: commentId, userId: user.id },
