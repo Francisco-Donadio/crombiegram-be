@@ -15,7 +15,7 @@ const authMiddleware: RequestHandler = async (req, res, next) => {
   try {
     const { authToken } = req.cookies;
     console.log({ authToken });
-    if (!authToken) {
+    if (!authToken && !req.headers.authorization) {
       return res.status(400).json({ message: "Invalid request" });
     }
 
