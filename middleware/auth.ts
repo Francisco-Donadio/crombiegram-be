@@ -14,7 +14,6 @@ type Payload = {
 const authMiddleware: RequestHandler = async (req, res, next) => {
   try {
     const { authToken } = req.cookies;
-    console.log({ authToken });
     if (!authToken && !req.headers.authorization) {
       return res.status(400).json({ message: "Invalid request" });
     }
@@ -23,6 +22,10 @@ const authMiddleware: RequestHandler = async (req, res, next) => {
       return res.status(400).json({ message: "Invalid request" });
     }
 
+    console.log({
+      authToken,
+      tokenLocaS: req.headers.authorization.split(" ")[1],
+    });
     const token = authToken
       ? authToken
       : req.headers.authorization.split(" ")[1];
