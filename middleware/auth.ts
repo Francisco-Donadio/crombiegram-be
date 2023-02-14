@@ -19,9 +19,16 @@ const authMiddleware: RequestHandler = async (req, res, next) => {
       return res.status(400).json({ message: "Invalid request" });
     }
 
-    // const token = req.headers.authorization.split(" ")[1];
+    if (!req.headers.authorization) {
+      return res.status(400).json({ message: "Invalid request" });
+    }
+
+    const token = authToken
+      ? authToken
+      : req.headers.authorization.split(" ")[1];
+
     var payload = jwt.verify(
-      authToken,
+      token,
       process.env.JTW_SECRET_AUTH as string
     ) as Payload;
 

@@ -32,8 +32,14 @@ const createPost: RequestHandler = async (req, res) => {
 };
 
 const getAllPost: RequestHandler = async (req, res) => {
+  const { page, size } = req.query;
+  const finalLimit = Number(size) || 10;
+  const finalOffset = (Number(page) - 1) * Number(size) || 0;
   try {
-    const postList = await Post.findAll({
+    const { count, rows } = await Post.findAndCountAll({
+      distinct: true,
+      limit: finalLimit,
+      offset: finalOffset,
       include: [
         {
           model: Comment,
@@ -63,7 +69,9 @@ const getAllPost: RequestHandler = async (req, res) => {
         [{ model: Comment, as: "comment" }, "createdAt", "ASC"],
       ],
     });
-    return res.status(200).json(postList);
+    console.log({ finalLimit, finalOffset });
+    const totalPages = Math.ceil(count / finalLimit);
+    return res.status(200).json(rows);
   } catch (error) {
     return res.json({ error: error });
   }
