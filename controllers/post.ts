@@ -44,7 +44,7 @@ const getAllPost: RequestHandler = async (req, res) => {
       include: [
         {
           model: Comment,
-          limit: 2,
+          limit: 3,
           order: [["createdAt", "DESC"]],
 
           include: [
@@ -68,10 +68,7 @@ const getAllPost: RequestHandler = async (req, res) => {
           ],
         },
       ],
-      order: [
-        ["createdAt", "DESC"],
-        // [{ model: Comment, as: "comment" }, "createdAt", "ASC"],
-      ],
+      order: [["createdAt", "DESC"]],
     });
 
     console.log({ finalLimit, finalOffset });

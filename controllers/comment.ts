@@ -2,31 +2,6 @@ import { RequestHandler } from "express";
 import Comment, { CommentCreationAttributes } from "../models/comment.model";
 import User from "../models/user.model";
 
-// const getHomePostsComments: RequestHandler = async (req, res) => {
-//   const { page, size } = req.query;
-//   const finalLimit = Number(size) || 2;
-//   const finalOffset = (Number(page) - 1) * Number(size) || 0;
-
-//   try {
-//     const { count, rows } = await Comment.findAndCountAll({
-//       distinct: true,
-//       limit: finalLimit,
-//       offset: finalOffset,
-//       order: [["createdAt", "ASC"]],
-//       include: [
-//         {
-//           model: User,
-//           attributes: ["firstName", "lastName", "profileImage", "position"],
-//         },
-//       ],
-//     });
-//     const totalPages = Math.ceil(count / finalLimit);
-//     return res.status(200).json(rows);
-//   } catch (error) {
-//     return res.json({ error: error });
-//   }
-// };
-
 const getPostComments: RequestHandler = async (req, res) => {
   const postId = req.params.id;
 
