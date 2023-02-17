@@ -22,10 +22,6 @@ const authMiddleware: RequestHandler = async (req, res, next) => {
       return res.status(400).json({ message: "Invalid request" });
     }
 
-    console.log({
-      authToken,
-      tokenLocaS: req.headers.authorization.split(" ")[1],
-    });
     const token = authToken
       ? authToken
       : req.headers.authorization.split(" ")[1];

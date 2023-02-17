@@ -4,6 +4,7 @@ import { PostCreationAttributes } from "../models/post.model";
 import User from "../models/user.model";
 import Comment from "../models/comment.model";
 import Like from "../models/like.model";
+import { Sequelize } from "sequelize-typescript";
 
 const createPost: RequestHandler = async (req, res) => {
   try {
@@ -43,6 +44,9 @@ const getAllPost: RequestHandler = async (req, res) => {
       include: [
         {
           model: Comment,
+          limit: 3,
+          order: [["createdAt", "DESC"]],
+
           include: [
             {
               model: User,
@@ -64,11 +68,9 @@ const getAllPost: RequestHandler = async (req, res) => {
           ],
         },
       ],
-      order: [
-        ["createdAt", "DESC"],
-        [{ model: Comment, as: "comment" }, "createdAt", "ASC"],
-      ],
+      order: [["createdAt", "DESC"]],
     });
+
     console.log({ finalLimit, finalOffset });
     const totalPages = Math.ceil(count / finalLimit);
     return res.status(200).json(rows);
