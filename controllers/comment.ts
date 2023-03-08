@@ -8,13 +8,14 @@ const getPostComments: RequestHandler = async (req, res) => {
   const { page, size } = req.query;
   const finalLimit = Number(size) || 5;
   const finalOffset = (Number(page) - 1) * Number(size) || 0;
+  // console.log(finalLimit, finalOffset);
   try {
     const { count, rows } = await Comment.findAndCountAll({
       where: { postId: postId },
       distinct: true,
       limit: finalLimit,
       offset: finalOffset,
-      order: [["createdAt", "ASC"]],
+      order: [["createdAt", "DESC"]],
       include: [
         {
           model: User,

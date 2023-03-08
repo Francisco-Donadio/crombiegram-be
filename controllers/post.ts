@@ -70,10 +70,9 @@ const getAllPost: RequestHandler = async (req, res) => {
       ],
       order: [["createdAt", "DESC"]],
     });
-
-    console.log({ finalLimit, finalOffset });
+    console.log(finalLimit, finalOffset);
     const totalPages = Math.ceil(count / finalLimit);
-    return res.status(200).json(rows);
+    return res.status(200).json({ totalCount: count, postList: rows });
   } catch (error) {
     return res.json({ error: error });
   }
