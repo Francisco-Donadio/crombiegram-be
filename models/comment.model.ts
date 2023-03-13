@@ -33,6 +33,7 @@ export interface CommentCreationAttributes
 @Table({
   tableName: "comment",
   timestamps: true,
+  paranoid: true,
 })
 export default class Comment extends Model<
   CommentInterface,

@@ -33,6 +33,7 @@ export interface PostCreationAttributes extends Optional<PostInterface, "id"> {}
 @Table({
   tableName: "post",
   timestamps: true,
+  paranoid: true,
 })
 export default class Post extends Model<PostInterface, PostCreationAttributes> {
   @PrimaryKey

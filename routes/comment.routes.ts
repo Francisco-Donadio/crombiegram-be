@@ -4,7 +4,7 @@ import authMiddleware from "../middleware/auth";
 
 const commentRouter = Router();
 
-commentRouter.get("/post/:id", authMiddleware, comment.getPostComments);
+commentRouter.get("/post/:id", comment.getPostComments);
 commentRouter.post("/post/:id", authMiddleware, comment.createCommentPost);
 commentRouter.delete("/:id", authMiddleware, comment.deleteCommentPost);
 

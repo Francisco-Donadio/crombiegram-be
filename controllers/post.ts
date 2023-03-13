@@ -35,7 +35,9 @@ const createPost: RequestHandler = async (req, res) => {
 const getAllPost: RequestHandler = async (req, res) => {
   const { page, size } = req.query;
   const finalLimit = Number(size) || 10;
-  const finalOffset = (Number(page) - 1) * Number(size) || 0;
+
+  const finalOffset = Number(page) * Number(size);
+
   try {
     const { count, rows } = await Post.findAndCountAll({
       distinct: true,
@@ -70,9 +72,10 @@ const getAllPost: RequestHandler = async (req, res) => {
       ],
       order: [["createdAt", "DESC"]],
     });
-    console.log(finalLimit, finalOffset);
+
     const totalPages = Math.ceil(count / finalLimit);
-    return res.status(200).json({ totalCount: count, postList: rows });
+    console.log();
+    return res.status(200).json(rows);
   } catch (error) {
     return res.json({ error: error });
   }
@@ -114,6 +117,7 @@ const deletePost: RequestHandler = async (req, res) => {
     const post = await Post.destroy({
       where: { id: id, userId: user.id },
     });
+
     return res.status(200).json({ message: "post deleted" });
   } catch (error) {
     return res.json({ error: error });
@@ -122,8 +126,13 @@ const deletePost: RequestHandler = async (req, res) => {
 
 const getPostById: RequestHandler = async (req, res) => {
   const userId = req.params.id;
+  const { page, size } = req.query;
+  const finalLimit = Number(size) || 10;
+  const finalOffset = Number(page) * Number(size);
   try {
     const postList = await Post.findAll({
+      limit: finalLimit,
+      offset: finalOffset,
       include: [
         {
           model: Comment,
@@ -162,9 +171,15 @@ const getPostById: RequestHandler = async (req, res) => {
 
 const getMyPosts: RequestHandler = async (req, res) => {
   const user = res.locals.user;
+  const { page, size } = req.query;
+  const finalLimit = Number(size) || 10;
+
+  const finalOffset = Number(page) * Number(size);
 
   try {
-    const myPosts = await Post.findAll({
+    const { count, rows } = await Post.findAndCountAll({
+      limit: finalLimit,
+      offset: finalOffset,
       include: [
         {
           model: User,
@@ -192,7 +207,7 @@ const getMyPosts: RequestHandler = async (req, res) => {
       where: { userId: user.id },
       order: [["createdAt", "DESC"]],
     });
-    return res.status(200).json(myPosts);
+    return res.status(200).json(rows);
   } catch (error) {
     return res.json({ error: error });
   }
