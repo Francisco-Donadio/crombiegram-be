@@ -9,9 +9,13 @@ app.use(cors({ origin: true, credentials: true }));
 app.use(cookieParser());
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  return res.status(200).send("Hola mundo");
+});
 //
 //SYNC
 //
+
 app.post("/sync", async (req, res) => {
   sequelize
     .authenticate()
