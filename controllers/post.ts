@@ -209,7 +209,6 @@ const getMyPosts: RequestHandler = async (req, res) => {
   const user = res.locals.user;
   const { page, size } = req.query;
   const finalLimit = Number(size) || 10;
-
   const finalOffset = Number(page) * Number(size);
 
   try {

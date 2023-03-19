@@ -9,7 +9,7 @@ postRouter.get("/", authMiddleware, post.getAllPost);
 // postRouter.get("/:id", authMiddleware, post.getPostWithComments);
 postRouter.post("/", authMiddleware, upload.single("image"), post.createPost);
 postRouter.delete("/:id", authMiddleware, post.deletePost);
-postRouter.get("/:id", authMiddleware, post.getPostById);
 postRouter.get("/me", authMiddleware, post.getMyPosts);
+postRouter.get("/:id", authMiddleware, post.getPostById);
 
 export default postRouter;
