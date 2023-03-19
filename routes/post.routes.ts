@@ -11,5 +11,6 @@ postRouter.post("/", authMiddleware, upload.single("image"), post.createPost);
 postRouter.delete("/:id", authMiddleware, post.deletePost);
 postRouter.get("/me", authMiddleware, post.getMyPosts);
 postRouter.get("/:id", authMiddleware, post.getPostById);
+postRouter.get("/contact/:id", authMiddleware, post.getPostListById);
 
 export default postRouter;

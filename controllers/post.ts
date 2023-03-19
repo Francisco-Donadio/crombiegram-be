@@ -125,46 +125,6 @@ const deletePost: RequestHandler = async (req, res) => {
 };
 
 const getPostById: RequestHandler = async (req, res) => {
-  // const userId = req.params.id;
-  // const { page, size } = req.query;
-  // const finalLimit = Number(size) || 10;
-  // const finalOffset = Number(page) * Number(size);
-  // try {
-  //   const postList = await Post.findAll({
-  //     limit: finalLimit,
-  //     offset: finalOffset,
-  //     include: [
-  //       {
-  //         model: Comment,
-  //         include: [
-  //           {
-  //             model: User,
-  //             attributes: ["firstName", "lastName", "profileImage", "position"],
-  //           },
-  //         ],
-  //       },
-  //       {
-  //         model: User,
-  //         attributes: ["firstName", "lastName", "profileImage", "position"],
-  //       },
-  //       {
-  //         model: Like,
-  //         include: [
-  //           {
-  //             model: User,
-  //             attributes: ["firstName", "lastName"],
-  //           },
-  //         ],
-  //       },
-  //     ],
-  //     where: { userId },
-  //     order: [
-  //       ["createdAt", "DESC"],
-  //       [{ model: Comment, as: "comment" }, "createdAt", "ASC"],
-  //     ],
-  //   });
-  //   return res.status(200).json(postList);
-
   try {
     const postId = req.params.id;
     const post = await Post.findOne({
@@ -202,6 +162,50 @@ const getPostById: RequestHandler = async (req, res) => {
     return res.json(post);
   } catch (error) {
     return res.json({ error: error });
+  }
+};
+const getPostListById: RequestHandler = async (req, res) => {
+  const userId = req.params.id;
+  const { page, size } = req.query;
+  const finalLimit = Number(size) || 10;
+  const finalOffset = Number(page) * Number(size);
+  try {
+    const postList = await Post.findAll({
+      limit: finalLimit,
+      offset: finalOffset,
+      include: [
+        {
+          model: Comment,
+          include: [
+            {
+              model: User,
+              attributes: ["firstName", "lastName", "profileImage", "position"],
+            },
+          ],
+        },
+        {
+          model: User,
+          attributes: ["firstName", "lastName", "profileImage", "position"],
+        },
+        {
+          model: Like,
+          include: [
+            {
+              model: User,
+              attributes: ["firstName", "lastName"],
+            },
+          ],
+        },
+      ],
+      where: { userId },
+      order: [
+        ["createdAt", "DESC"],
+        [{ model: Comment, as: "comment" }, "createdAt", "ASC"],
+      ],
+    });
+    return res.status(200).json(postList);
+  } catch (error) {
+    return res.status(404).json({ error });
   }
 };
 
@@ -255,4 +259,5 @@ export default {
   deletePost,
   getPostById,
   getMyPosts,
+  getPostListById,
 };
