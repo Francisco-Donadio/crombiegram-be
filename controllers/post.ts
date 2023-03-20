@@ -73,8 +73,6 @@ const getAllPost: RequestHandler = async (req, res) => {
       order: [["createdAt", "DESC"]],
     });
 
-    const totalPages = Math.ceil(count / finalLimit);
-    console.log();
     return res.status(200).json(rows);
   } catch (error) {
     return res.json({ error: error });
@@ -158,7 +156,7 @@ const getPostById: RequestHandler = async (req, res) => {
         [{ model: Comment, as: "comment" }, "createdAt", "ASC"],
       ],
     });
-    console.log(post);
+
     return res.json(post);
   } catch (error) {
     return res.json({ error: error });

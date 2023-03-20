@@ -20,8 +20,6 @@ app.post("/sync", async (req, res) => {
   sequelize
     .authenticate()
     .then(async () => {
-      console.log("database connected");
-
       try {
         await sequelize.sync({ force: true });
         return res.status(200).json({ message: "sync complete" });

@@ -32,7 +32,7 @@ const authMiddleware: RequestHandler = async (req, res, next) => {
     ) as Payload;
 
     const user = await User.findByPk(payload.id);
-    // console.log(user);
+
     if (!user) {
       throw new Error("user not founds");
     }
