@@ -9,7 +9,6 @@ const getPostComments: RequestHandler = async (req, res) => {
   const finalLimit = Number(size) || 5;
   const finalOffset = Number(page) * Number(size);
 
-  // console.log(finalLimit, finalOffset);
   try {
     const { count, rows } = await Comment.findAndCountAll({
       where: { postId: postId },

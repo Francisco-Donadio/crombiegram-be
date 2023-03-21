@@ -15,7 +15,7 @@ type userDataPayloadType = {
 const revalidateToken: RequestHandler = async (req, res) => {
   try {
     const authToken = req.cookies.authToken;
-    console.log({ authToken });
+
     var userDataPayload = jwt.verify(
       authToken,
       process.env.JTW_SECRET_AUTH as string
@@ -26,8 +26,6 @@ const revalidateToken: RequestHandler = async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: "User is invalid" });
     }
-
-    // console.log("vengo desde las cookies revaldate token", userToken);
 
     const newToken = jwt.sign(
       userDataPayload,
